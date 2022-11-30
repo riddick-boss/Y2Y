@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "categories",
+    tableName = "categories_table",
     indices = [Index("id")]
 )
 data class Category(
@@ -14,8 +14,8 @@ data class Category(
     @ColumnInfo(name = "name")
     val name: String,
 
-    @ColumnInfo(name = "color_hex")
-    val colorHex: String,
+    @ColumnInfo(name = "color_int")
+    val colorInt: Int?,
 
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null

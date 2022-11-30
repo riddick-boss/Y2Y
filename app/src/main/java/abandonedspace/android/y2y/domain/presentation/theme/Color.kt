@@ -1,4 +1,4 @@
-package abandonedspace.android.y2y.ui.theme
+package abandonedspace.android.y2y.domain.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

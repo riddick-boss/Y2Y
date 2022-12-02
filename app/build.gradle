@@ -123,11 +123,15 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
 
-    // Room
+    //    Room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    //    Color Picker
+    implementation "com.godaddy.android.colorpicker:compose-color-picker:$color_picker"
+    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:$color_picker"
 
     //   Local Unit Tests
     implementation "androidx.test:core:1.5.0"

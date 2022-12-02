@@ -9,7 +9,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import abandonedspace.android.y2y.domain.presentation.theme.Y2YTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * @author Pawel Kremienowski <Kremienowski33@gmail.com>
+ */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

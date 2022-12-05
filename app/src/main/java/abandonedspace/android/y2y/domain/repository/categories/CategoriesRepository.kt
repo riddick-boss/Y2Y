@@ -10,5 +10,5 @@ interface CategoriesRepository {
 
     suspend fun getCategoryById(id: Int): Category
 
-    suspend fun insertCategory(name: String, color: Color?)
+    suspend fun insert(name: String, color: Color?)
 }

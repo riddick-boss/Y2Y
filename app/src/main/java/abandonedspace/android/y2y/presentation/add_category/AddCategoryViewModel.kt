@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,8 +57,7 @@ class AddCategoryViewModel @Inject constructor(
         viewModelScope.launch {
             showProgressBar()
             try {
-                delay(5000)
-                categoriesRepository.insertCategory(
+                categoriesRepository.insert(
                     name = categoryName.value,
                     color = categoryColor.value
                 )

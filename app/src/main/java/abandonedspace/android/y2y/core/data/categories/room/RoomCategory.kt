@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "categories_table",
     indices = [Index("id")]
 )
-data class Category(
+data class RoomCategory(
 
     @ColumnInfo(name = "name")
     val name: String,

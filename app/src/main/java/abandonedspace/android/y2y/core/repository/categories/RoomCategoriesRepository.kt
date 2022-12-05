@@ -9,22 +9,23 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class CategoriesRepositoryImpl @Inject constructor(
+class RoomCategoriesRepository @Inject constructor(
     private val dao: CategoryDao
 ) : CategoriesRepository {
+
     override fun getCategories(): Flow<List<Category>> = dao.getCategories().map {
-        it.map { category -> category.toDomainCategory() }
+        it.map { category -> category.toCategory() }
     }
 
-    override suspend fun getCategoryById(id: Int): Category = dao.getCategory(id = id).toDomainCategory()
+    override suspend fun getCategoryById(id: Int): Category = dao.getCategory(id = id).toCategory()
 
-    override suspend fun insertCategory(name: String, color: Color?) {
-        if (name.isBlank()) throw IllegalArgumentException("Category name can not be null!")
+    override suspend fun insert(name: String, color: Color?) {
+        if (name.isBlank()) throw IllegalArgumentException("RoomCategory name can not be null!")
 
-        val category = abandonedspace.android.y2y.core.data.categories.room.Category(
+        val roomCategory = abandonedspace.android.y2y.core.data.categories.room.RoomCategory(
             name = name,
             colorInt = color?.toArgb()
         )
-        dao.insert(category)
+        dao.insert(roomCategory)
     }
 }

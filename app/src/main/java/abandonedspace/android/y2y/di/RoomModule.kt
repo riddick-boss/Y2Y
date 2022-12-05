@@ -1,5 +1,6 @@
 package abandonedspace.android.y2y.di
 
+import abandonedspace.android.y2y.core.data.achievement.AchievementDao
 import abandonedspace.android.y2y.core.data.categories.room.CategoryDao
 import abandonedspace.android.y2y.core.data.room.AchievementsDatabase
 import android.content.Context
@@ -24,4 +25,8 @@ object RoomModule {
     @Provides
     @Singleton
     fun provideCategoryDao(db: AchievementsDatabase): CategoryDao = db.categoryDao()
+
+    @Provides
+    @Singleton
+    fun provideAchievementDao(db: AchievementsDatabase): AchievementDao = db.achievementDao()
 }

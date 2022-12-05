@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
-class CategoryDaoTest {
+class RoomCategoryDaoTest {
 
     private lateinit var db: AchievementsDatabase
     private lateinit var dao: CategoryDao
@@ -37,24 +37,24 @@ class CategoryDaoTest {
 
     @Test
     fun insertCategoryAddsNewRecord() = runBlocking {
-        val category1 = Category("dumbName1", 123456, id = 1)
-        val category2 = Category("dumbName2", 654321, id = 2)
+        val roomCategory1 = RoomCategory("dumbName1", 123456, id = 1)
+        val roomCategory2 = RoomCategory("dumbName2", 654321, id = 2)
 
-        dao.insert(category1)
-        dao.insert(category2)
+        dao.insert(roomCategory1)
+        dao.insert(roomCategory2)
 
         val categories = dao.getCategories().first()
 
-        Truth.assertThat(categories).contains(category1)
-        Truth.assertThat(categories).contains(category2)
+        Truth.assertThat(categories).contains(roomCategory1)
+        Truth.assertThat(categories).contains(roomCategory2)
         Truth.assertThat(categories).hasSize(2)
     }
 
     @Test
     fun insertAutoGeneratesId() = runBlocking {
-        val category = Category("dumbName", 123456)
+        val roomCategory = RoomCategory("dumbName", 123456)
 
-        dao.insert(category)
+        dao.insert(roomCategory)
 
         val categories = dao.getCategories().first()
 
@@ -63,19 +63,19 @@ class CategoryDaoTest {
 
     @Test
     fun getByIdReturnsCorrectCategory() = runBlocking {
-        val category1 = Category("dumbName1", 123456, id = 1)
-        val category2 = Category("dumbName2", 654321, id = 2)
-        val category3 = Category("dumbName3", 123321, id = 3)
+        val roomCategory1 = RoomCategory("dumbName1", 123456, id = 1)
+        val roomCategory2 = RoomCategory("dumbName2", 654321, id = 2)
+        val roomCategory3 = RoomCategory("dumbName3", 123321, id = 3)
 
         dao.run {
-            insert(category1)
-            insert(category2)
-            insert(category3)
+            insert(roomCategory1)
+            insert(roomCategory2)
+            insert(roomCategory3)
         }
 
         val categoryById = dao.getCategory(2)
 
-        Truth.assertThat(categoryById).isEqualTo(category2)
+        Truth.assertThat(categoryById).isEqualTo(roomCategory2)
         Truth.assertThat(categoryById.name).isEqualTo("dumbName2")
         Truth.assertThat(categoryById.colorInt).isEqualTo(654321)
         Truth.assertThat(categoryById.id).isEqualTo(2)
@@ -86,14 +86,14 @@ class CategoryDaoTest {
         val name1 = "aaaaa"
         val name2 = "bbbb"
         val name3 = "cccccccc"
-        val category1 = Category(name1, 123456)
-        val category2 = Category(name2, 654321)
-        val category3 = Category(name3, 123321)
+        val roomCategory1 = RoomCategory(name1, 123456)
+        val roomCategory2 = RoomCategory(name2, 654321)
+        val roomCategory3 = RoomCategory(name3, 123321)
 
         dao.run {
-            insert(category2)
-            insert(category3)
-            insert(category1)
+            insert(roomCategory2)
+            insert(roomCategory3)
+            insert(roomCategory1)
         }
 
         val categories = dao.getCategories().first()

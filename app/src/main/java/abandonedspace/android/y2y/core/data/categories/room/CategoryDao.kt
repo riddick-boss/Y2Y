@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryDao {
 
     @Insert
-    suspend fun insert(category: Category)
+    suspend fun insert(roomCategory: RoomCategory)
 
     @Query("SELECT * FROM categories_table ORDER BY name")
-    fun getCategories(): Flow<List<Category>>
+    fun getCategories(): Flow<List<RoomCategory>>
 
     @Query("SELECT * FROM categories_table WHERE id LIKE :id")
-    fun getCategory(id: Int): Category
+    fun getCategory(id: Int): RoomCategory
 }

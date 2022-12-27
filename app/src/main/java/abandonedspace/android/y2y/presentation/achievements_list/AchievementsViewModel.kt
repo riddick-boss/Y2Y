@@ -8,6 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.time.Month
+import java.time.Year
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,8 +22,14 @@ class AchievementsViewModel @Inject constructor(
         repository.getAchievements().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
     }
 
-    fun onAddAchievementClicked() {
-        //TODO
+    fun onAddAchievement(title: String, description: String, month: Int, year: Int) {
+        try {
+            viewModelScope.launch {
+                repository.insert(title, description.ifBlank { null }, Month.of(month), Year.of(year))
+            }
+        } catch (e: Exception) {
+            //TODO
+        }
     }
 
     fun onAchievementDeleteClicked(id: Int) {

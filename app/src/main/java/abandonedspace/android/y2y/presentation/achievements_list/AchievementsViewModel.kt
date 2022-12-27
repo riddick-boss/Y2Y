@@ -22,4 +22,8 @@ class AchievementsViewModel @Inject constructor(
     fun onAddAchievementClicked() {
         //TODO
     }
+
+    fun onAchievementDeleteClicked(id: Int) {
+
+    }
 }

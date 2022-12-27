@@ -33,6 +33,12 @@ class AchievementsViewModel @Inject constructor(
     }
 
     fun onAchievementDeleteClicked(id: Int) {
-
+        try {
+            viewModelScope.launch {
+                repository.delete(id)
+            }
+        } catch (e: Exception) {
+            //TODO
+        }
     }
 }

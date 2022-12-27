@@ -27,6 +27,10 @@ class RoomAchievementsRepository @Inject constructor(
         dao.insert(achievement)
     }
 
+    override suspend fun delete(id: Int) {
+        dao.deleteById(id)
+    }
+
     override fun getAchievements(): Flow<List<Achievement>> = dao.getAchievements().map { list ->
         list.map { achievement -> mapper.toDomainAchievement(achievement) }
     }.distinctUntilChanged()

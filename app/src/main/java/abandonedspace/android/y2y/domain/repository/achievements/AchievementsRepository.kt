@@ -9,5 +9,7 @@ interface AchievementsRepository {
 
     suspend fun insert(title: String, description: String?, month: Month, year: Year)
 
+    suspend fun delete(id: Int)
+
     fun getAchievements(): Flow<List<Achievement>>
 }

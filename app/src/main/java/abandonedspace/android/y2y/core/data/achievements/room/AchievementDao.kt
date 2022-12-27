@@ -13,6 +13,10 @@ interface AchievementDao {
     @Insert
     suspend fun insert(achievement: Achievement)
 
+    @WorkerThread
+    @Query("DELETE FROM achievements_table WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
     @Query("SELECT * FROM achievements_table ORDER BY year ASC, month ASC")
     fun getAchievements(): Flow<List<Achievement>>
 }

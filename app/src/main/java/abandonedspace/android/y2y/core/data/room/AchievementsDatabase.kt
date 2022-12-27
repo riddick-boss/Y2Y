@@ -1,11 +1,11 @@
 package abandonedspace.android.y2y.core.data.room
 
-import abandonedspace.android.y2y.core.data.categories.room.Category
-import abandonedspace.android.y2y.core.data.categories.room.CategoryDao
+import abandonedspace.android.y2y.core.data.achievements.room.Achievement
+import abandonedspace.android.y2y.core.data.achievements.room.AchievementDao
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [Category::class], version = 1)
+@Database(entities = [Achievement::class], version = 1)
 abstract class AchievementsDatabase : RoomDatabase() {
-    abstract fun categoryDao(): CategoryDao
+    abstract fun achievementDao(): AchievementDao
 }

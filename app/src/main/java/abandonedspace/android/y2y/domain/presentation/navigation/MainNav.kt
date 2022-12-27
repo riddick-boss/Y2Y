@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 fun MainNav() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = SCREENS.ADD_CATEGORY.route.value) { // TODO: start destination
+    NavHost(navController = navController, startDestination = SCREENS.ACHIEVEMENTS.route.value) {
         SCREENS.values().forEach {
             composable(
                 route = it.route.value,

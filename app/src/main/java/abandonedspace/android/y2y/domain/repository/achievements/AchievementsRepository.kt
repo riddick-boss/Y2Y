@@ -1,5 +1,13 @@
 package abandonedspace.android.y2y.domain.repository.achievements
 
+import abandonedspace.android.y2y.domain.model.Achievement
+import kotlinx.coroutines.flow.Flow
+import java.time.Month
+import java.time.Year
+
 interface AchievementsRepository {
-    //TODO
+
+    suspend fun insert(title: String, description: String?, month: Month, year: Year)
+
+    fun getAchievements(): Flow<List<Achievement>>
 }

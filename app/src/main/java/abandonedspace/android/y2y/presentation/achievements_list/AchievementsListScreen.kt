@@ -1,8 +1,10 @@
 package abandonedspace.android.y2y.presentation.achievements_list
 
+import abandonedspace.android.y2y.R
 import abandonedspace.android.y2y.domain.model.Achievement
 import abandonedspace.android.y2y.domain.model.Date
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -14,13 +16,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.Month
 import java.time.Year
@@ -37,6 +43,12 @@ fun AchievementsScreen(
         skipHalfExpanded = true
     )
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.onCloseBottomSheet.onEach {
+            bottomSheetState.hide()
+        }.launchIn(this)
+    }
 
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
@@ -129,19 +141,34 @@ private fun BottomSheetContent(onCreateClicked: (String, String, Int, Int) -> Un
     var year by remember { mutableStateOf(Year.now().value) }
 
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Text(text = stringResource(id = R.string.add_achievement))
             IconButton(onClick = { onCreateClicked(title, description, month, year) }) {
                 Icon(Icons.Filled.Add, "")
             }
         }
-        TextField(value = title, onValueChange = { title = it }, modifier = Modifier.fillMaxWidth())
-        TextField(value = description, onValueChange = { description = it }, modifier = Modifier.fillMaxWidth())
+        BottomSheetTextField(labelResId = R.string.achievement_title_label, value = title, onValueChange = { title = it })
+        BottomSheetTextField(labelResId = R.string.achievement_description_label, value = description, onValueChange = { description = it })
     }
+}
+
+@Composable
+private fun BottomSheetTextField(@StringRes labelResId: Int, value: String, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        label = {
+            Text(text = stringResource(id = labelResId))
+        }
+    )
 }
 
 @Preview

@@ -11,50 +11,78 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.chargemap.compose.numberpicker.NumberPicker
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.Month
 import java.time.Year
+import java.time.format.TextStyle
+import java.util.*
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AchievementsScreen(
     viewModel: AchievementsViewModel = hiltViewModel()
 ) {
     val achievements by viewModel.achievements.collectAsState()
+    val title by viewModel.title.collectAsState()
+    val description by viewModel.description.collectAsState()
+    val month by viewModel.month.collectAsState()
+    val year by viewModel.year.collectAsState()
 
     val bottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
     val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(Unit) {
         viewModel.onCloseBottomSheet.onEach {
             bottomSheetState.hide()
+            focusManager.clearFocus()
+            keyboardController?.hide()
         }.launchIn(this)
     }
 
     ModalBottomSheetLayout(
         sheetState = bottomSheetState,
-        sheetContent = { BottomSheetContent(onCreateClicked = viewModel::onAddAchievement) },
+        sheetContent = {
+            BottomSheetContent(
+                title = title,
+                description = description,
+                month = month,
+                year = year,
+                onTitleChanged = viewModel::onTitleChanged,
+                onDescriptionChanged = viewModel::onDescriptionChanged,
+                onMonthChanged = viewModel::onMonthChanged,
+                onYearChanged = viewModel::onYearChanged,
+                onCreateClicked = viewModel::onAddAchievement
+            )
+        },
 
-    ) {
+        ) {
         Scaffold(
             floatingActionButtonPosition = FabPosition.Center,
             floatingActionButton = {
@@ -62,16 +90,16 @@ fun AchievementsScreen(
                     Icon(Icons.Filled.Add, "")
                 }
             },
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(
-                cutoutShape = MaterialTheme.shapes.small.copy(
-                    CornerSize(percent = 50)
-                )
-            ) {
-                // nothing here...
+            isFloatingActionButtonDocked = true,
+            bottomBar = {
+                BottomAppBar(
+                    cutoutShape = MaterialTheme.shapes.small.copy(
+                        CornerSize(percent = 50)
+                    )
+                ) {
+                    // nothing here...
+                }
             }
-        }
         ) { paddingValues ->
             BackHandler(enabled = bottomSheetState.isVisible) {
                 scope.launch { bottomSheetState.hide() }
@@ -83,7 +111,10 @@ fun AchievementsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(achievements.size, key = { achievements[it].id!! }) {
-                    AchievementCard(achievement = achievements[it], onDeleteClicked = viewModel::onAchievementDeleteClicked)
+                    AchievementCard(
+                        achievement = achievements[it],
+                        onDeleteClicked = viewModel::onAchievementDeleteClicked
+                    )
                 }
             }
         }
@@ -112,10 +143,10 @@ private fun AchievementCard(achievement: Achievement, onDeleteClicked: (Int) -> 
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = achievement.date.displayValue)
-            Text(text = achievement.title)
+            Text(text = achievement.date.displayValue, style = MaterialTheme.typography.overline)
+            Text(text = achievement.title, style = MaterialTheme.typography.h6)
             achievement.description?.also {
-                Text(text = it)
+                Text(text = it, style = MaterialTheme.typography.body2)
             }
 
             if (deleteButtonVisible) {
@@ -134,12 +165,17 @@ private fun AchievementCard(achievement: Achievement, onDeleteClicked: (Int) -> 
 }
 
 @Composable
-private fun BottomSheetContent(onCreateClicked: (String, String, Int, Int) -> Unit) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var month by remember { mutableStateOf(1) }
-    var year by remember { mutableStateOf(Year.now().value) }
-
+private fun BottomSheetContent(
+    title: String,
+    description: String,
+    month: Int,
+    year: Int,
+    onTitleChanged: (String) -> Unit,
+    onDescriptionChanged: (String) -> Unit,
+    onMonthChanged: (Int) -> Unit,
+    onYearChanged: (Int) -> Unit,
+    onCreateClicked: () -> Unit
+) {
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -150,21 +186,64 @@ private fun BottomSheetContent(onCreateClicked: (String, String, Int, Int) -> Un
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = stringResource(id = R.string.add_achievement))
-            IconButton(onClick = { onCreateClicked(title, description, month, year) }) {
+            IconButton(onClick = { onCreateClicked() }) {
                 Icon(Icons.Filled.Add, "")
             }
         }
-        BottomSheetTextField(labelResId = R.string.achievement_title_label, value = title, onValueChange = { title = it })
-        BottomSheetTextField(labelResId = R.string.achievement_description_label, value = description, onValueChange = { description = it })
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MonthsPicker(value = month, onValueChange = onMonthChanged)
+            YearPicker(value = year, onValueChange = onYearChanged)
+        }
+        BottomSheetTextField(
+            labelResId = R.string.achievement_title_label,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            value = title,
+            onValueChange = onTitleChanged
+        )
+        BottomSheetTextField(
+            labelResId = R.string.achievement_description_label,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            value = description,
+            onValueChange = onDescriptionChanged
+        )
     }
 }
 
 @Composable
-private fun BottomSheetTextField(@StringRes labelResId: Int, value: String, onValueChange: (String) -> Unit) {
+private fun MonthsPicker(value: Int, onValueChange: (Int) -> Unit) {
+    NumberPicker(
+        label = { Month.of(it).getDisplayName(TextStyle.FULL_STANDALONE, Locale.ENGLISH) },
+        value = value,
+        onValueChange = onValueChange,
+        range = 1..12
+    )
+}
+
+@Composable
+private fun YearPicker(value: Int, onValueChange: (Int) -> Unit) {
+    NumberPicker(
+        value = value,
+        onValueChange = onValueChange,
+        range = 1900..Year.now().value
+    )
+}
+
+@Composable
+private fun BottomSheetTextField(
+    @StringRes labelResId: Int,
+    keyboardOptions: KeyboardOptions,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = keyboardOptions,
         label = {
             Text(text = stringResource(id = labelResId))
         }

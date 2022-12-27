@@ -131,9 +131,8 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    //    Color Picker
-    implementation "com.godaddy.android.colorpicker:compose-color-picker:$color_picker"
-    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:$color_picker"
+    //    Number picker
+    implementation "com.chargemap.compose:numberpicker:1.0.3"
 
     //   Local Unit Tests
     implementation "androidx.test:core:1.5.0"

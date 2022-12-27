@@ -37,6 +37,12 @@ android {
             localProperties.load(new FileInputStream(localPropertiesFile))
         }
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
         buildConfigField("String", "ROOM_DB_NAME", '"Y2Y_DATABASE"')
     }
 

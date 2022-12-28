@@ -10,5 +10,5 @@ data class Date(
     private val year: Year
 ) {
     val displayValue: String
-        get() = "${month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)}/${year.value}"
+        get() = "${month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.ENGLISH)} ${year.value}"
 }

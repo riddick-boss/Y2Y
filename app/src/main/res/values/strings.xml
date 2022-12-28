@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Y2Y</string>
+    <string name="achievement_title_label">Title</string>
+    <string name="achievement_description_label">Description</string>
+    <string name="add_achievement">Add achievement</string>
 </resources>

@@ -1,17 +1,20 @@
 package abandonedspace.android.y2y
 
+import abandonedspace.android.y2y.domain.presentation.navigation.MainNav
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import abandonedspace.android.y2y.ui.theme.Y2YTheme
+import abandonedspace.android.y2y.domain.presentation.theme.Y2YTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * @author Pawel Kremienowski <Kremienowski33@gmail.com>
+ */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,22 +25,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    MainNav()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Y2YTheme {
-        Greeting("Android")
     }
 }

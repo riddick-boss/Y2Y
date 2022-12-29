@@ -29,9 +29,9 @@ App is organized in MVVM architecture. User is able to enter his achievement, wh
 Unit tests and instrumented unit tests are created. Instrumented tests were necessary for testing Room dao, which needs in-memory database.
 Frameworks used:
 - JUnit4
-- Truth
-- Mockito
-- Turbine
+- [Truth](https://truth.dev/)
+- [Mockito](https://site.mockito.org/)
+- [Turbine](https://github.com/cashapp/turbine)
 
 Sample test:
 ```kotlin
